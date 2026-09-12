@@ -1,9 +1,15 @@
+# System files and virtual environments
 __pycache__/
 *.py[cod]
 *$py.class
+.vscode/
 .DS_Store
 Thumbs.db
 venv/
 .venv/
 env/
-.vscode/
+
+# Local data personalized for each user
+data/*.txt
+data/*.json
+config.json
