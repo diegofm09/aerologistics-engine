@@ -2,8 +2,9 @@ import exceptions as e
 from pathlib import Path
 from datetime import datetime
 import time
-from typing import Any, Callable
+from typing import Any, Callable, Generator
 from functools import wraps
+import random
 
 
 main_p = Path(__file__).resolve().parent.parent
@@ -67,3 +68,12 @@ def audit_execution(function: Callable[..., Any]) -> Callable[..., Any]:
             raise e
              
     return wrapper
+
+
+def fuel_price_simulator(seed_value: int | None = None) -> Generator[float, None, None]:
+    """Generates a random variation of the oil price between -3.5 and 3.5"""
+    if seed_value is not None:
+        random.seed(seed_value)
+    while True:
+        variation = round(random.uniform(-3.5, 3.5), 2)
+        yield variation
