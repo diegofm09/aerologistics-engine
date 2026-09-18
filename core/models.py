@@ -22,3 +22,11 @@ class Waybill:
             raise ValueError("The Waybill must have a sender")
 
 
+class GPSPoint:
+    """Creates a GPS Point"""
+    __slots__ = ("latitude", "longitude", "timestamp", "speed")
+    def __init__(self, latitude: float, longitude: float, timestamp: str, speed: float) -> None:
+        self.latitude = latitude
+        self.longitude = longitude
+        self.timestamp = timestamp
+        self.speed = speed
