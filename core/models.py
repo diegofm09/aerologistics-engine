@@ -149,13 +149,12 @@ class StandardPackage(BasePackage):
 class ExpressPackage(BasePackage):
     """The express package class"""
 
-    def __init__(self, package_id, weight_kg, destination_zip, length, width, height, urgency_level: int):
+    def __init__(self, package_id: str, weight_kg: float, destination_zip: str, length: float, width: float, height: float, urgency_level: int):
         super().__init__(package_id, weight_kg, destination_zip, length, width, height)
-        self.__delivered: bool = False
-        self.__urgency_level = urgency_level
+        self.urgency_level = urgency_level
 
     @property
-    def urgency_level(self):
+    def urgency_level(self) -> int:
         return self.__urgency_level
 
     @urgency_level.setter
@@ -165,16 +164,15 @@ class ExpressPackage(BasePackage):
         else:
             raise exceptions.InvalidUrgencyLevel
 
-    @urgency_level.deleter
-    def urgency_level(self):
-        self.__urgency_level = 1
-
     def calculate_volume(self) -> float:
-        level =float(f"1,{str(self.urgency_level)}")
+        level = 1.0 + self.urgency_level * 0.05
         return (self.width * self.length * self.height)*level
 
     def get_package_type(self) -> str:
         return "Express Package"
+
+    def __repr__(self):
+        return f"StandardPackage(package_id={self.package_id}, weight_kg={self.weight_kg}, destination_zip={self.destination_zip}, length={self.length}, width={self.width}, height={self.height}, delivered={self.delivered}, urgency_level={self.urgency_level})"
 
     
 
