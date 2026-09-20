@@ -119,7 +119,7 @@ class BasePackage(ABC):
         pass
 
     def __str__(self) -> str:
-        return f" ---------------\nPackage ID: {self.__package_id}\n -Weight: {self.__weight_kg}kg\n -Destination Zip: {self.__destination_zip}\n -Status: {"Delivered" if self.__delivered else "Undelivered"} \n---------------"
+        return f" ---------------\nPackage ID: {self.__package_id}\n -Weight: {self.__weight_kg}kg\n -Destination Zip: {self.__destination_zip}\n -Status: {"Delivered" if self.__delivered else "Undelivered"}\n -Dimensions: {self.length}*{self.width}*{self.height}cm \n---------------"
 
     def __eq__(self, other) -> bool:
         return self.__package_id == other.package_id
@@ -135,8 +135,46 @@ class BasePackage(ABC):
 
 
 class StandardPackage(BasePackage):
-    def __init__(self, package_id, weight_kg, destination_zip, length, width, height):
-        pass
+    """The standard package class"""
+    def calculate_volume(self) -> float:
+        return self.width * self.length * self.height
+
+    def get_package_type(self) -> str:
+        return "Standard Package"
+
+    def __repr__(self):
+        return f"StandardPackage(package_id={self.package_id}, weight_kg={self.weight_kg}, destination_zip={self.destination_zip}, length={self.length}, width={self.width}, height={self.height}, delivered={self.delivered})"
+
+
+class ExpressPackage(BasePackage):
+    """The express package class"""
+
+    def __init__(self, package_id, weight_kg, destination_zip, length, width, height, urgency_level: int):
+        super().__init__(package_id, weight_kg, destination_zip, length, width, height)
+        self.__delivered: bool = False
+        self.__urgency_level = urgency_level
+
+    @property
+    def urgency_level(self):
+        return self.__urgency_level
+
+    @urgency_level.setter
+    def urgency_level(self, new: int) -> None:
+        if new >= 1 and new <= 5:
+            self.__urgency_level = new
+        else:
+            raise exceptions.InvalidUrgencyLevel
+
+    @urgency_level.deleter
+    def urgency_level(self):
+        self.__urgency_level = 1
+
+    def calculate_volume(self) -> float:
+        level =float(f"1,{str(self.urgency_level)}")
+        return (self.width * self.length * self.height)*level
+
+    def get_package_type(self) -> str:
+        return "Express Package"
 
     
 
