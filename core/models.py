@@ -36,11 +36,26 @@ class GPSPoint:
 
 class BasePackage(ABC):
     """An abstract class that works as a base for all the package types"""
-    def __init__(self, package_id, weight_kg, destination_zip) -> None:
+    def __init__(self, package_id: str, weight_kg: float, destination_zip: str, length: float, width: float, height: float) -> None:
         self.__package_id: str = package_id
-        self.weight_kg: float = weight_kg
+        self.weight_kg = weight_kg
         self.__destination_zip: str = destination_zip
+        self.length = length
+        self.width = width
+        self.height = height
         self.__delivered: bool = False
+
+    @property
+    def length(self) -> float:
+        return self.__length
+
+    @property
+    def width(self) -> float:
+        return self.__width
+
+    @property
+    def height(self) -> float:
+        return self.__height
 
     @property
     def package_id(self) -> str:
@@ -67,6 +82,27 @@ class BasePackage(ABC):
     @destination_zip.setter
     def destination_zip(self, new_zip: str) -> None:
         self.__destination_zip = new_zip
+
+    @length.setter
+    def length(self, new: float) -> None:
+        if new > 0:
+            self.__length = new
+        else:
+            raise exceptions.InvalidPackageError
+
+    @width.setter
+    def width(self, new: float) -> None:
+        if new > 0:
+            self.__width = new
+        else:
+            raise exceptions.InvalidPackageError
+
+    @height.setter
+    def height(self, new: float) -> None:
+        if new > 0:
+            self.__height = new
+        else:
+            raise exceptions.InvalidPackageError
 
     @destination_zip.deleter
     def destination_zip(self) -> None:
@@ -96,6 +132,11 @@ class BasePackage(ABC):
 
     def __add__(self, other) -> float:
         return self.__weight_kg + other.weight_kg
+
+
+class StandardPackage(BasePackage):
+    def __init__(self, package_id, weight_kg, destination_zip, length, width, height):
+        pass
 
     
 
