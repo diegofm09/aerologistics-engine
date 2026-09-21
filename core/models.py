@@ -175,5 +175,33 @@ class ExpressPackage(BasePackage):
         return f"StandardPackage(package_id={self.package_id}, weight_kg={self.weight_kg}, destination_zip={self.destination_zip}, length={self.length}, width={self.width}, height={self.height}, delivered={self.delivered}, urgency_level={self.urgency_level})"
 
     
+class RefrigeratedPackage(BasePackage):
+    def __init__(self, package_id, weight_kg, destination_zip, length, width, height, target_temp_celsius: float):
+        super().__init__(package_id, weight_kg, destination_zip, length, width, height)
+        self.target_temp_celsius = target_temp_celsius
+
+    @property
+    def target_temp_celsius(self) -> float:
+        return self.target_temp_celsius
+
+    @target_temp_celsius.setter
+    def target_temp_celsius(self, new) -> None:
+        if new<-50.0 or new>5.0:
+            raise exceptions.InvalidTemperatureTarget
+        else:
+            self.__target_temp_celsius = new
+
+    def calculate_volume(self):
+        if self.target_temp_celsius >= -50.0 and self.target_temp_celsius<-30.0:
+            temp_level = 1.5
+        elif self.target_temp_celsius >= -30.0 and self.target_temp_celsius<-10.0:
+            temp_level = 1.35
+        elif self.target_temp_celsius >= -10.0 and self.target_temp_celsius<0.0:
+            temp_level = 1.2
+        elif self.target_temp_celsius >= 0 and self.target_temp_celsius<5.00:
+            temp_level = 1.1
+        return (self.height*self.width*self.length)*temp_level
+
+    def getr
 
     
