@@ -210,11 +210,11 @@ class RefrigeratedPackage(BasePackage):
 
 
 class DeliveryTruck:
-    def __init__(self, truck_id: str, max_weight_capacity: float, shippig_strategy: str, packages: list) -> None:
+    def __init__(self, truck_id: str, max_weight_capacity: float, shipping_strategy: str) -> None:
         self.__truck_id = truck_id
         self.max_weight_capacity = max_weight_capacity
-        self.__shipping_strategy = shippig_strategy
-        self.__packages = packages
+        self.shipping_strategy = shipping_strategy
+        self.__packages = []
 
     @property
     def truck_id(self) -> str:
@@ -230,7 +230,7 @@ class DeliveryTruck:
 
     @property
     def packages(self) -> list:
-        return self.__packages
+        return list(self.__packages)
 
     @max_weight_capacity.setter
     def max_weight_capacity(self, new: float) -> None:
@@ -242,8 +242,17 @@ class DeliveryTruck:
     def shipping_strategy(self, new: str) -> None:
         self.__shipping_strategy = new
 
+    def add_package(self, package):
+        self.packages.append(package)
+        #HACER QUE TENGA EN CUENTA EL PESO DEL CAMION KXEIBEIGXEGCVEVCIEEIEUIHDEUIGDYYGEIGYEDYGIDEGYIE
+
+    def delete_package(self, id):
+        for i in self.packages:
+            if i.package_id == id:
+                self.packages.remove(i)
+
     def __len__(self):
         return len(self.packages)
 
     def __contains__(self, item):
-        return item in self.packages
+        return item in self.packages or item.package_id
