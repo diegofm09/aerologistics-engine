@@ -208,4 +208,42 @@ class RefrigeratedPackage(BasePackage):
     def __repr__(self):
         return f"RefrigeratedPackage(package_id={self.package_id}, weight_kg={self.weight_kg}, destination_zip={self.destination_zip}, length={self.length}, width={self.width}, height={self.height}, delivered={self.delivered}, target_temp_celsius={self.target_temp_celsius})"
 
-    
+
+class DeliveryTruck:
+    def __init__(self, truck_id: str, max_weight_capacity: float, shippig_strategy: str, packages: list) -> None:
+        self.__truck_id = truck_id
+        self.max_weight_capacity = max_weight_capacity
+        self.__shipping_strategy = shippig_strategy
+        self.__packages = packages
+
+    @property
+    def truck_id(self) -> str:
+        return self.__truck_id
+
+    @property
+    def max_weight_capacity(self) -> float:
+        return self.__max_weight_capacity
+
+    @property
+    def shipping_strategy(self) -> str:
+        return self.__shipping_strategy
+
+    @property
+    def packages(self) -> list:
+        return self.__packages
+
+    @max_weight_capacity.setter
+    def max_weight_capacity(self, new: float) -> None:
+        if 2500 > new or 50000 < new:
+            raise exceptions.TruckWeightError
+        self.__max_weight_capacity = new
+
+    @shipping_strategy.setter
+    def shipping_strategy(self, new: str) -> None:
+        self.__shipping_strategy = new
+
+    def __len__(self):
+        return len(self.packages)
+
+    def __contains__(self, item):
+        return item in self.packages

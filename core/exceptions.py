@@ -26,3 +26,7 @@ class PersistenceError(AerologisticsEngineError):
     """Error while opening files"""
     pass    
 
+class TruckWeightError(AerologisticsEngineError):
+    """The truck weight capacity must be between 2500 and 50000kg"""
+    pass    
+
