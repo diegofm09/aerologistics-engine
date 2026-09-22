@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from abc import ABC, abstractmethod
 import exceptions
+from typing import Any
 
 @dataclass(frozen=True)
 class Waybill:
@@ -210,10 +211,11 @@ class RefrigeratedPackage(BasePackage):
 
 
 class DeliveryTruck:
-    def __init__(self, truck_id: str, max_weight_capacity: float, shipping_strategy: str) -> None:
+    def __init__(self, truck_id: str, max_weight_capacity: float, shipping_strategy: Any) -> None:
         self.__truck_id = truck_id
         self.max_weight_capacity = max_weight_capacity
         self.shipping_strategy = shipping_strategy
+        self.__used_weight = 0
         self.__packages = []
 
     @property
@@ -232,6 +234,10 @@ class DeliveryTruck:
     def packages(self) -> list:
         return list(self.__packages)
 
+    @property
+    def used_weight(self) -> float:
+        return self.__used_weight
+
     @max_weight_capacity.setter
     def max_weight_capacity(self, new: float) -> None:
         if 2500 > new or 50000 < new:
@@ -243,16 +249,29 @@ class DeliveryTruck:
         self.__shipping_strategy = new
 
     def add_package(self, package):
-        self.packages.append(package)
-        #HACER QUE TENGA EN CUENTA EL PESO DEL CAMION KXEIBEIGXEGCVEVCIEEIEUIHDEUIGDYYGEIGYEDYGIDEGYIE
+        if (self.used_weight + package.weight_kg) <= self.max_weight_capacity:
+            self.__packages.append(package)
+            self.__used_weight += package.weight_kg
+        else:
+            raise exceptions.OverweightLimitError
 
     def delete_package(self, id):
+        sol = 0
         for i in self.packages:
             if i.package_id == id:
-                self.packages.remove(i)
+                self.__packages.remove(i)
+                self.__used_weight -= i.weight_kg
+                sol = 1
+                break
+        print("Deleted" if sol == 1 else "Not found")
+            
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.packages)
 
-    def __contains__(self, item):
-        return item in self.packages or item.package_id
+    def __contains__(self, item) -> bool:
+        if isinstance(item, str):
+            return any(package.package_id == item for package in self.packages)
+        if isinstance(item, BasePackage):
+            return item in self.packages
+        return False
