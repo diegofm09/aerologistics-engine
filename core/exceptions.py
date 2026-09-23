@@ -10,6 +10,10 @@ class InvalidPackageError(AerologisticsEngineError):
     """The dimensions and weight of the packages must be > 0"""
     pass
 
+class NonExistinPackageType(AerologisticsEngineError):
+    """The package type must be either standard, express or refrigerated"""
+    pass
+
 class InvalidUrgencyLevel(AerologisticsEngineError):
     """The urgency level must be an integrer between 1 and 5"""
     pass

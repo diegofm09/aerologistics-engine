@@ -120,7 +120,7 @@ class BasePackage(ABC):
         pass
 
     def __str__(self) -> str:
-        return f" ---------------\nPackage ID: {self.__package_id}\n -Weight: {self.__weight_kg}kg\n -Destination Zip: {self.__destination_zip}\n -Status: {"Delivered" if self.__delivered else "Undelivered"}\n -Dimensions: {self.length}*{self.width}*{self.height}cm \n---------------"
+        return f" ---------------\nPackage ID: {self.__package_id}\n -Weight: {self.__weight_kg}kg\n -Destination Zip: {self.__destination_zip}\n -Status: {'Delivered' if self.__delivered else 'Undelivered'}\n -Dimensions: {self.length}*{self.width}*{self.height}cm \n---------------"
 
     def __eq__(self, other) -> bool:
         return self.__package_id == other.package_id
@@ -177,6 +177,7 @@ class ExpressPackage(BasePackage):
 
     
 class RefrigeratedPackage(BasePackage):
+    """The Refrigerated Package Class"""
     def __init__(self, package_id: str, weight_kg: float, destination_zip: str, length: float, width: float, height: float, target_temp_celsius: float) -> None:
         super().__init__(package_id, weight_kg, destination_zip, length, width, height)
         self.target_temp_celsius = target_temp_celsius
@@ -211,6 +212,7 @@ class RefrigeratedPackage(BasePackage):
 
 
 class DeliveryTruck:
+    """Delivery Truck class"""
     def __init__(self, truck_id: str, max_weight_capacity: float, shipping_strategy: Any) -> None:
         self.__truck_id = truck_id
         self.max_weight_capacity = max_weight_capacity
@@ -249,6 +251,7 @@ class DeliveryTruck:
         self.__shipping_strategy = new
 
     def add_package(self, package):
+        """Adds a package to packages"""
         if (self.used_weight + package.weight_kg) <= self.max_weight_capacity:
             self.__packages.append(package)
             self.__used_weight += package.weight_kg
@@ -256,6 +259,7 @@ class DeliveryTruck:
             raise exceptions.OverweightLimitError
 
     def delete_package(self, id):
+        """Deletes a package from packages"""
         sol = 0
         for i in self.packages:
             if i.package_id == id:
