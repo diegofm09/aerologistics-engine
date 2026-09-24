@@ -132,7 +132,11 @@ class BasePackage(ABC):
         return self.__weight_kg > other.weight_kg
 
     def __add__(self, other) -> float:
-        return self.__weight_kg + other.weight_kg
+        if isinstance(other, (float, int)):
+            return self.__weight_kg + other
+        else:
+            return self.__weight_kg + other.weight_kg
+        return NotImplemented
 
 
 class StandardPackage(BasePackage):
