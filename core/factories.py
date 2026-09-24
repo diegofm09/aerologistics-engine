@@ -16,4 +16,4 @@ class PackageFactory:
             case "refrigerated":
                 return RefrigeratedPackage(**kwargs)
             case _:
-                raise exceptions.NonExistinPackageType(exceptions.NonExistinPackageType.__doc__)
+                raise exceptions.NonExistinPackageType(f"The package type {type} does not exist, it must be standard, express or refrigerated")

@@ -77,7 +77,7 @@ class BasePackage(ABC):
     @weight_kg.setter
     def weight_kg(self, new_weight: float) -> None:
         if new_weight <= 0:
-            raise exceptions.InvalidPackageError
+            raise exceptions.InvalidPackageError("The weight and dimensions must be higher than 0")
         self.__weight_kg = new_weight
 
     @destination_zip.setter
@@ -89,21 +89,21 @@ class BasePackage(ABC):
         if new > 0:
             self.__length = new
         else:
-            raise exceptions.InvalidPackageError
+            raise exceptions.InvalidPackageError("The weight and dimensions must be higher than 0")
 
     @width.setter
     def width(self, new: float) -> None:
         if new > 0:
             self.__width = new
         else:
-            raise exceptions.InvalidPackageError
+            raise exceptions.InvalidPackageError("The weight and dimensions must be higher than 0")
 
     @height.setter
     def height(self, new: float) -> None:
         if new > 0:
             self.__height = new
         else:
-            raise exceptions.InvalidPackageError
+            raise exceptions.InvalidPackageError("The weight and dimensions must be higher than 0")
 
     @destination_zip.deleter
     def destination_zip(self) -> None:
@@ -134,7 +134,7 @@ class BasePackage(ABC):
     def __add__(self, other) -> float:
         if isinstance(other, (float, int)):
             return self.__weight_kg + other
-        else:
+        elif isinstance(other, BasePackage):
             return self.__weight_kg + other.weight_kg
         return NotImplemented
 
@@ -167,7 +167,7 @@ class ExpressPackage(BasePackage):
         if new >= 1 and new <= 5:
             self.__urgency_level = new
         else:
-            raise exceptions.InvalidUrgencyLevel
+            raise exceptions.InvalidUrgencyLevel("The urgency level must be an integrer between 1 and 5")
 
     def calculate_volume(self) -> float:
         level = 1.0 + self.urgency_level * 0.05
@@ -193,7 +193,7 @@ class RefrigeratedPackage(BasePackage):
     @target_temp_celsius.setter
     def target_temp_celsius(self, new: float) -> None:
         if new<-50.0 or new>5.0:
-            raise exceptions.InvalidTemperatureTarget
+            raise exceptions.InvalidTemperatureTarget("The temperature target must be between -50.0 and 5.0")
         else:
             self.__target_temp_celsius = new
 
@@ -247,7 +247,7 @@ class DeliveryTruck:
     @max_weight_capacity.setter
     def max_weight_capacity(self, new: float) -> None:
         if 2500 > new or 50000 < new:
-            raise exceptions.TruckWeightError
+            raise exceptions.TruckWeightError("The truck weight capacity must be between 2500 and 50000")
         self.__max_weight_capacity = new
 
     @shipping_strategy.setter
@@ -260,7 +260,7 @@ class DeliveryTruck:
             self.__packages.append(package)
             self.__used_weight += package.weight_kg
         else:
-            raise exceptions.OverweightLimitError
+            raise exceptions.OverweightLimitError("The truck's weight limit has been exceeded")
 
     def delete_package(self, id):
         """Deletes a package from packages"""
