@@ -33,7 +33,6 @@ def get_date_str() -> str:
 
 class LoggerMixin:
     """Mixin used to make all child classes inherit the log_event method"""
-
     def log_event(self, message: str) -> None:
         """Logs an event and writes it down onto the app log"""
 
@@ -45,7 +44,6 @@ class LoggerMixin:
 
 def audit_execution(function: Callable[..., Any]) -> Callable[..., Any]:
     """Writes the function used and the ms it took on app log"""
-
     @wraps(function)
     def wrapper(*args: Any, **kwargs: Any) -> Any:
         current_date = get_date_str()
@@ -77,7 +75,6 @@ def fuel_price_simulator(seed_value: int | None = None) -> Generator[float, None
     while True:
         variation = round(random.uniform(-3.5, 3.5), 2)
         yield variation
-
 
 def calculate_delivery_windows() -> dict[str, str]:
     """Returns what day it is going to be in 3, 7 and 15 days"""
