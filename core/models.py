@@ -247,7 +247,7 @@ class DeliveryVehicle:
     @max_weight_capacity.setter
     def max_weight_capacity(self, new: float) -> None:
         if 0.5 > new or 50000 < new:
-            raise exceptions.TruckWeightError("The vehicle's weight capacity must be between 0.5 and 50000")
+            raise exceptions.VehicleWeightError("The vehicle's weight capacity must be between 0.5 and 50000")
         self.__max_weight_capacity = new
 
     @shipping_strategy.setter
@@ -272,6 +272,9 @@ class DeliveryVehicle:
                 sol = 1
                 break
         print("Deleted" if sol == 1 else "Not found")
+
+    def get_shipping_cost(self, km: float) -> float:
+        return self.strategy.cost(km, self.used_weight)
             
 
     def __len__(self) -> int:
