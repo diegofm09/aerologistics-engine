@@ -274,7 +274,7 @@ class DeliveryVehicle:
         print("Deleted" if sol == 1 else "Not found")
 
     def get_shipping_cost(self, km: float) -> float:
-        return self.strategy.cost(km, self.used_weight)
+        return self.shipping_strategy.cost(km, self.used_weight)
             
 
     def __len__(self) -> int:

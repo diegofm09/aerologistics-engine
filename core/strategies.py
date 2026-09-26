@@ -5,7 +5,7 @@ from exceptions import InvalidShipping
 class ShippingStrategy(ABC):
     """Abstract class for shipping strategy"""
     @abstractmethod
-    def cost(self, km, kg) -> float:
+    def cost(self, km: float, kg: float) -> float:
         """Gets the cost of the shipping"""
         pass
 
