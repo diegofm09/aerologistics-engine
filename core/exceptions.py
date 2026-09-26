@@ -3,7 +3,7 @@ class AerologisticsEngineError(Exception):
     pass
 
 class OverweightLimitError(AerologisticsEngineError):
-    """The total weight is higher than the trucks capacity"""
+    """The total weight is higher than the vehicle's capacity"""
     pass
 
 class InvalidPackageError(AerologisticsEngineError):
@@ -30,7 +30,11 @@ class PersistenceError(AerologisticsEngineError):
     """Error while opening files"""
     pass    
 
-class TruckWeightError(AerologisticsEngineError):
-    """The truck weight capacity must be between 2500 and 50000kg"""
+class VehicleWeightError(AerologisticsEngineError):
+    """The vehicle weight capacity must be between 0.5 and 50000kg"""
     pass    
+
+class InvalidShipping(AerologisticsEngineError):
+    """The shipping km and kg must be higher than 0"""
+    pass
 

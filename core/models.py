@@ -215,8 +215,8 @@ class RefrigeratedPackage(BasePackage):
         return f"RefrigeratedPackage(package_id={self.package_id}, weight_kg={self.weight_kg}, destination_zip={self.destination_zip}, length={self.length}, width={self.width}, height={self.height}, delivered={self.delivered}, target_temp_celsius={self.target_temp_celsius})"
 
 
-class DeliveryTruck:
-    """Delivery Truck class"""
+class DeliveryVehicle:
+    """Delivery Vehicle class"""
     def __init__(self, truck_id: str, max_weight_capacity: float, shipping_strategy: Any) -> None:
         self.__truck_id = truck_id
         self.max_weight_capacity = max_weight_capacity
@@ -246,8 +246,8 @@ class DeliveryTruck:
 
     @max_weight_capacity.setter
     def max_weight_capacity(self, new: float) -> None:
-        if 2500 > new or 50000 < new:
-            raise exceptions.TruckWeightError("The truck weight capacity must be between 2500 and 50000")
+        if 0.5 > new or 50000 < new:
+            raise exceptions.TruckWeightError("The vehicle's weight capacity must be between 0.5 and 50000")
         self.__max_weight_capacity = new
 
     @shipping_strategy.setter
@@ -260,7 +260,7 @@ class DeliveryTruck:
             self.__packages.append(package)
             self.__used_weight += package.weight_kg
         else:
-            raise exceptions.OverweightLimitError("The truck's weight limit has been exceeded")
+            raise exceptions.OverweightLimitError("The vehicle's weight limit has been exceeded")
 
     def delete_package(self, id):
         """Deletes a package from packages"""
