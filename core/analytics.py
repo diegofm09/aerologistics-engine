@@ -1,4 +1,4 @@
-from typing import Generator
+from typing import Generator, Callable
 from models import DeliveryVehicle, BasePackage
 
 def packages_extractor(vehicle_list: list[DeliveryVehicle], filter_type: str = None) -> Generator[BasePackage, None, None]:
@@ -7,6 +7,10 @@ def packages_extractor(vehicle_list: list[DeliveryVehicle], filter_type: str = N
         for package in vehicle.packages:
             if filter_type is None or package.get_package_type() == filter_type:
                 yield package
-                
 
-            
+
+def create_weight_checker(max_limit: float) -> Callable[[BasePackage], bool]:
+    def check_weight(package: BasePackage):
+        return package.weight_kg > max_limit
+    return check_weight
+
