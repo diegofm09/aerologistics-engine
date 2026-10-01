@@ -21,4 +21,15 @@ def calculate_fleet_weight(vehicle_list: list[DeliveryVehicle]) -> dict[str: Any
     total_weight = sum(packages, 0.0)
     max_weight = max(packages) if packages else None
     min_weight = min(packages) if packages else None
-    return {"total_weight": total_weight, "max_weight": max_weight, "min_weight": min_weight}
+    return {"total_weight": total_weight, "max_weight": max_weight.weight_kg, "min_weight": min_weight.weight_kg}
+
+def filter_packages_weight(vehicle_list: list[DeliveryVehicle], min: float = 0.0, max:float = float("inf")) -> list[tuple[str]]:
+    """Returns all the packages heavier than min, of a list of vehicles in a legible str with its vehicle id"""
+    packages = []
+    for vehicle in vehicle_list:
+        for package in vehicle.packages:
+            packages.append((vehicle.vehicle_id, package))
+    filtered_packages = list(filter(lambda x: min < x[1].weight_kg < max, packages))
+    str_packages = list(map(lambda x: (f"Package {x[1].package_id}: {x[1].weight_kg}kg", x[0]), filtered_packages))
+    return str_packages
+

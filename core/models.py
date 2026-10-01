@@ -217,16 +217,16 @@ class RefrigeratedPackage(BasePackage):
 
 class DeliveryVehicle:
     """Delivery Vehicle class"""
-    def __init__(self, truck_id: str, max_weight_capacity: float, shipping_strategy: Any) -> None:
-        self.__truck_id = truck_id
+    def __init__(self, vehicle_id: str, max_weight_capacity: float, shipping_strategy: Any) -> None:
+        self.__vehicle_id = vehicle_id
         self.max_weight_capacity = max_weight_capacity
         self.shipping_strategy = shipping_strategy
         self.__used_weight = 0
         self.__packages = []
 
     @property
-    def truck_id(self) -> str:
-        return self.__truck_id
+    def vehicle_id(self) -> str:
+        return self.__vehicle_id
 
     @property
     def max_weight_capacity(self) -> float:
