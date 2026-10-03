@@ -33,3 +33,8 @@ def filter_packages_weight(vehicle_list: list[DeliveryVehicle], min: float = 0.0
     str_packages = list(map(lambda x: (f"Package {x[1].package_id}: {x[1].weight_kg}kg", x[0]), filtered_packages))
     return str_packages
 
+def get_urgent_packages_destination(package_list: list[BasePackage]) -> list[str]:
+    return [package.destination_zip for package in package_list if package.get_package_type() == "Express Package"]
+
+
+
