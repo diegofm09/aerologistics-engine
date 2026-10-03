@@ -36,5 +36,8 @@ def filter_packages_weight(vehicle_list: list[DeliveryVehicle], min: float = 0.0
 def get_urgent_packages_destination(package_list: list[BasePackage]) -> list[str]:
     return [package.destination_zip for package in package_list if package.get_package_type() == "Express Package"]
 
+def get_all_zipcodes(package_list: list[BasePackage]) -> list[str]:
+    return {package.destination_zip for package in package_list}
+
 
 
