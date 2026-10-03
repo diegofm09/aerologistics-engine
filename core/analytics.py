@@ -33,11 +33,11 @@ def filter_packages_weight(vehicle_list: list[DeliveryVehicle], min: float = 0.0
     str_packages = list(map(lambda x: (f"Package {x[1].package_id}: {x[1].weight_kg}kg", x[0]), filtered_packages))
     return str_packages
 
-def get_urgent_packages_destination(package_list: list[BasePackage]) -> list[str]:
-    return [package.destination_zip for package in package_list if package.get_package_type() == "Express Package"]
+def get_urgent_packages_destination(vehicle_list: list[DeliveryVehicle]) -> list[str]:
+    return [package.destination_zip.upper() for package in packages_extractor(vehicle_list) if package.get_package_type() == "Express Package"]
 
-def get_all_zipcodes(package_list: list[BasePackage]) -> list[str]:
-    return {package.destination_zip for package in package_list}
+def get_all_zipcodes(vehicle_list: list[DeliveryVehicle]) -> set[str]:
+    return {package.destination_zip for package in packages_extractor(vehicle_list)}
 
-
-
+def create_fast_consult_map(vehicle_list: list[DeliveryVehicle]) -> dict[str, tuple[float, str]]:
+    return {x.package_id:(x.weight_kg, x.get_package_type()) for x in packages_extractor(vehicle_list)}
