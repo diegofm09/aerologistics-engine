@@ -34,10 +34,21 @@ def filter_packages_weight(vehicle_list: list[DeliveryVehicle], min: float = 0.0
     return str_packages
 
 def get_urgent_packages_destination(vehicle_list: list[DeliveryVehicle]) -> list[str]:
+    """Returns a list with the zipcodes of the express packages"""
     return [package.destination_zip.upper() for package in packages_extractor(vehicle_list) if package.get_package_type() == "Express Package"]
 
 def get_all_zipcodes(vehicle_list: list[DeliveryVehicle]) -> set[str]:
+    """Returns a set with all the zipcodes of a vehicle list"""
     return {package.destination_zip for package in packages_extractor(vehicle_list)}
 
 def create_fast_consult_map(vehicle_list: list[DeliveryVehicle]) -> dict[str, tuple[float, str]]:
+    """Returns a dict with the package id as key and a tuple with the weight and type of all the packages in a vehicle list"""
     return {x.package_id:(x.weight_kg, x.get_package_type()) for x in packages_extractor(vehicle_list)}
+
+
+def compare_historical_zipcodes(vehicle_list: list[DeliveryVehicle], historical_zipcodes: set[str]) -> dict[str, set[str]]:
+    """Compares the historical zicpodes with the ones of a vehicle list"""
+    actual_zipcodes = get_all_zipcodes(vehicle_list)
+    new_zipcodes = actual_zipcodes - historical_zipcodes
+    repeated_zipcodes = historical_zipcodes & actual_zipcodes
+    return {"new_zipcodes": new_zipcodes, "repeated_zipcodes": repeated_zipcodes}
