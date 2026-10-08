@@ -1,5 +1,6 @@
 from pathlib import Path
 import json
+from models import DeliveryVehicle
 
 class FleetRepository:
     """Repository class managing data persistence, file storage initialization, and JSON serialization/deserialization for the fleet system."""
@@ -33,5 +34,11 @@ class FleetRepository:
                 json.dump(self.default_config, file2, indent=2)
         except Exception:
             pass
+
+    def save_fleet(self, vehicle_list: list[DeliveryVehicle]) -> None:
+        """Saves the vehicle list in the fleet.json file"""
+        vehicle_list = [{"vehicle_id": i.vehicle_id, "max_weight_capacity": i.max_weight_capacity, "shipping_strategy": i.shipping_strategy, "used_weight": i.used_weight, "packages": i.packages} for i in vehicle_list]
+        with open(self.fleet_p, "w", encoding="utf-8") as file3:
+            json.dump(vehicle_list, file3, indent = 2)
 
 reporitory = FleetRepository()
