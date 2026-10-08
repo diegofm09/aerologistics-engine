@@ -1,6 +1,7 @@
 from pathlib import Path
 import json
 from models import DeliveryVehicle
+from typing import Any
 
 class FleetRepository:
     """Repository class managing data persistence, file storage initialization, and JSON serialization/deserialization for the fleet system."""
@@ -40,5 +41,10 @@ class FleetRepository:
         vehicle_list = [{"vehicle_id": i.vehicle_id, "max_weight_capacity": i.max_weight_capacity, "shipping_strategy": i.shipping_strategy, "used_weight": i.used_weight, "packages": i.packages} for i in vehicle_list]
         with open(self.fleet_p, "w", encoding="utf-8") as file3:
             json.dump(vehicle_list, file3, indent = 2)
+
+    def load_fleet(self) -> list[dict[str, Any]]:
+        """Loads the vehicle  list of the fleet.json file"""
+        with open(self.fleet_p, "r", encoding="utf-8") as file4:
+            return json.load(file4)
 
 reporitory = FleetRepository()
