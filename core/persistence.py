@@ -38,9 +38,23 @@ class FleetRepository:
 
     def save_fleet(self, vehicle_list: list[DeliveryVehicle]) -> None:
         """Saves the vehicle list in the fleet.json file"""
-        vehicle_list = [{"vehicle_id": i.vehicle_id, "max_weight_capacity": i.max_weight_capacity, "shipping_strategy": i.shipping_strategy, "used_weight": i.used_weight, "packages": [{"package_id": x.package_id, "weight_kg": x.weight_kg, "destination_zip": x.destination_zip, "length": x.length, "width": x.width, "height": x.height, "urgency_level": (x.urgency_level if x.get_package_type() == "Express Package" else None), "target_temp_celsius": (x.target_temp_celsius if x.get_package_type() == "Refrigerated Package" else None)} for x in i.packages]} for i in vehicle_list]
+        final_vehicle_list = []
+        for i in vehicle_list:
+            v = {"vehicle_id": i.vehicle_id, "max_weight_capacity": i.max_weight_capacity, "shipping_strategy": i.shipping_strategy, "used_weight": i.used_weight, "packages": []}
+            for x in i.packages:
+                p = {"package_id": x.package_id, "weight_kg": x.weight_kg, "destination_zip": x.destination_zip, "length": x.length, "width": x.width, "height": x.height, "delivered": x.delivered}
+                p_type = p.get_package_type()
+                if p_type == "Standard Package":
+                    v["packages"].append(p)
+                elif p_type == "Express Package":
+                    p["urgency_level"] = x.urgency_level
+                    v["packages"].append(p)
+                elif p_type == "Refrigerated Package":
+                    p["target_temp_celsius"] = x.target_temp_celsius
+                    v["packages"].append(p)
+
         with open(self.fleet_p, "w", encoding="utf-8") as file3:
-            json.dump(vehicle_list, file3, indent = 2)
+            json.dump(final_vehicle_list, file3, indent = 2)
 
     def load_fleet(self) -> list[dict[str, Any]]:
         """Loads the vehicle  list of the fleet.json file"""
