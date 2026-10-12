@@ -251,7 +251,7 @@ class DeliveryVehicle:
         self.__max_weight_capacity = new
 
     @shipping_strategy.setter
-    def shipping_strategy(self, new: str) -> None:
+    def shipping_strategy(self, new: Any) -> None:
         self.__shipping_strategy = new
 
     def add_package(self, package):

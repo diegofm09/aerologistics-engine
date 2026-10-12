@@ -40,10 +40,10 @@ class FleetRepository:
         """Saves the vehicle list in the fleet.json file"""
         final_vehicle_list = []
         for i in vehicle_list:
-            v = {"vehicle_id": i.vehicle_id, "max_weight_capacity": i.max_weight_capacity, "shipping_strategy": i.shipping_strategy, "used_weight": i.used_weight, "packages": []}
+            v = {"vehicle_id": i.vehicle_id, "max_weight_capacity": i.max_weight_capacity, "shipping_strategy": (i.shipping_strategy.__class__.__name__), "used_weight": i.used_weight, "packages": []}
             for x in i.packages:
                 p = {"package_id": x.package_id, "weight_kg": x.weight_kg, "destination_zip": x.destination_zip, "length": x.length, "width": x.width, "height": x.height, "delivered": x.delivered}
-                p_type = p.get_package_type()
+                p_type = x.get_package_type()
                 if p_type == "Standard Package":
                     v["packages"].append(p)
                 elif p_type == "Express Package":
@@ -52,6 +52,7 @@ class FleetRepository:
                 elif p_type == "Refrigerated Package":
                     p["target_temp_celsius"] = x.target_temp_celsius
                     v["packages"].append(p)
+            final_vehicle_list.append(v)
 
         with open(self.fleet_p, "w", encoding="utf-8") as file3:
             json.dump(final_vehicle_list, file3, indent = 2)
