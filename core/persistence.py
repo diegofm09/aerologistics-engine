@@ -2,6 +2,8 @@ from pathlib import Path
 import json
 from models import DeliveryVehicle
 from typing import Any
+from factories import PackageFactory
+from strategies import GroundShipping, AirShipping, DroneEcoShipping
 
 class FleetRepository:
     """Repository class managing data persistence, file storage initialization, and JSON serialization/deserialization for the fleet system."""
@@ -45,21 +47,51 @@ class FleetRepository:
                 p = {"package_id": x.package_id, "weight_kg": x.weight_kg, "destination_zip": x.destination_zip, "length": x.length, "width": x.width, "height": x.height, "delivered": x.delivered}
                 p_type = x.get_package_type()
                 if p_type == "Standard Package":
+                    p["type"] == "standard"
                     v["packages"].append(p)
                 elif p_type == "Express Package":
                     p["urgency_level"] = x.urgency_level
+                    p["type"] == "express"
                     v["packages"].append(p)
                 elif p_type == "Refrigerated Package":
                     p["target_temp_celsius"] = x.target_temp_celsius
+                    p["type"] == "refrigerated"
                     v["packages"].append(p)
             final_vehicle_list.append(v)
 
         with open(self.fleet_p, "w", encoding="utf-8") as file3:
             json.dump(final_vehicle_list, file3, indent = 2)
 
-    def load_fleet(self) -> list[dict[str, Any]]:
+    def load_fleet(self) -> list[DeliveryVehicle]:
         """Loads the vehicle  list of the fleet.json file"""
         with open(self.fleet_p, "r", encoding="utf-8") as file4:
-            return json.load(file4)
+            raw_fleet_list = json.load(file4)
+            factory = PackageFactory()
+            packages_list = []
+            vehicles_list = []
+            for v in raw_fleet_list:
+                for p in v["packages"]:
+                    p_type = p["type"]
+                    p.pop("type")
+                    package = factory.create_package(p_type, p)
+                    packages_list.append(package)
+
+                if v["shipping_strategy"] == "GroundShipping":
+                    v["shipping_strategy"] = GroundShipping()
+                if v["shipping_strategy"] == "AirShipping":
+                    v["shipping_strategy"] = AirShipping()
+                if v["shipping_strategy"] == "DroneEcoShipping":
+                    v["shipping_strategy"] = DroneEcoShipping()
+
+                vehicle = DeliveryVehicle(v["vehicle_id"], v["max_weight_capacity"], v["shipping_strategy"])
+                for i in packages_list:
+                    vehicle.add_package(i)
+                vehicles_list.append(vehicle)
+        return vehicles_list
+
+
+                    
+
+
 
 reporitory = FleetRepository()
