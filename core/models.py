@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from abc import ABC, abstractmethod
-import exceptions
+import core.exceptions
 from typing import Any
 
 @dataclass(frozen=True)

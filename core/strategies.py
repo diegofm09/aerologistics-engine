@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from exceptions import InvalidShipping
+from core.exceptions import InvalidShipping
 
 
 class ShippingStrategy(ABC):

@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Any
-from utils import LoggerMixin
+from core.utils import LoggerMixin
 
 class DeliveryObserver(ABC):
     @abstractmethod
@@ -32,10 +32,12 @@ class DeliverySubject:
 
 
 class CustomerSMSListener(DeliveryObserver):
+    """A listener that prints the observer update in the terminal"""
     def update(self, event: str, data: Any):
         print(f"{event}: {data}")
 
 class LogisticsAuditListener(DeliveryObserver, LoggerMixin):
+    """A listener that logs the observer update in app_log.txt"""
     def update(self, event: str, data: str):
         self.log_event(f"{event}: {data}")
     

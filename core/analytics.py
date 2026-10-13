@@ -1,5 +1,5 @@
 from typing import Generator, Callable
-from models import DeliveryVehicle, BasePackage, Any
+from core.models import DeliveryVehicle, BasePackage, Any
 
 def packages_extractor(vehicle_list: list[DeliveryVehicle], filter_type: str = None) -> Generator[BasePackage, None, None]:
     """A generator that yields every package in a vehicle list, it can be filtered"""
