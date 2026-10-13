@@ -4,6 +4,7 @@ from models import DeliveryVehicle
 from typing import Any
 from factories import PackageFactory
 from strategies import GroundShipping, AirShipping, DroneEcoShipping
+from models import Waybill
 
 class FleetRepository:
     """Repository class managing data persistence, file storage initialization, and JSON serialization/deserialization for the fleet system."""
@@ -88,8 +89,12 @@ class FleetRepository:
                 vehicles_list.append(vehicle)
         return vehicles_list
 
+    def export_waybill(self, waybill: Waybill) -> None:
+        """Exports a waybill object to waybill_export.txt"""
+        with open(self.waybill_export_p, "a", encoding="utf-8") as file5:
+            file5.write(f" ------------------------\n Waybill {waybill.waybill_id}\n From {waybill.sender} to {waybill.destination}\n Issued date: {waybill.issued_date}\n Final price: {waybill.final_cost}$\n ------------------------\n")
 
-                    
+          
 
 
 
