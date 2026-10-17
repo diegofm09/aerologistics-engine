@@ -21,7 +21,10 @@ while True:
                 print("-----------------------")
                 match suboption:
                     case "1.1":
-                        pass
+                        fleet_list = repository.load_fleet()
+                        for vehicle in fleet_list:
+                            print(f"ID: {vehicle.vehicle_id} SHIPPING STRATEGY: {vehicle.shipping_strategy.__class__.__name__} USED WEIGHT: {vehicle.used_weight}/{vehicle.max_weight_capacity}kg")
+                            
                     case "1.2":
                         pass
                     case "1.3":
