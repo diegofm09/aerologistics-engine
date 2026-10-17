@@ -1,5 +1,7 @@
 from core.persistence import FleetRepository
 from core.observers import DeliverySubject, CustomerSMSListener, LogisticsAuditListener
+from core.models import DeliveryVehicle
+from core.strategies import DroneEcoShipping, GroundShipping, AirShipping
 
 repository = FleetRepository()
 delivery_subject = DeliverySubject()
@@ -24,9 +26,41 @@ while True:
                         fleet_list = repository.load_fleet()
                         for vehicle in fleet_list:
                             print(f"ID: {vehicle.vehicle_id} SHIPPING STRATEGY: {vehicle.shipping_strategy.__class__.__name__} USED WEIGHT: {vehicle.used_weight}/{vehicle.max_weight_capacity}kg")
-                            
+
                     case "1.2":
-                        pass
+                        try:
+                            print("--- Add New Vehicle ---")
+                            id = input("What will be the id of the new vehicle?: ")
+                            while True:
+                                strategy = input("What will be its strategy:\n 1) Ground Shipping\n 2) Air Shipping\n 3) Eco Drone Shipping\n")
+                                match strategy:
+                                    case "1":
+                                        strategy = GroundShipping()
+                                        break
+                                    case "2":
+                                        strategy = AirShipping()
+                                        break
+                                    case "3":
+                                        strategy = DroneEcoShipping()
+                                        break
+                                    case _:
+                                        print("Error, please enter 1, 2 or 3")
+                            max_weight = float(input("Enter the max weight of the vehicle: "))
+
+                            new = DeliveryVehicle(vehicle_id=id, max_weight_capacity=max_weight, shipping_strategy=strategy)
+
+                            fleet = repository.load_fleet()
+                            fleet.append(new)
+                            repository.save_fleet(fleet)
+
+                            print(f"Vehicle '{id}' added successfully and saved to JSON!")
+
+                        except ValueError:
+                            print("[Error]: Please enter a valid number for the weight capacity.")
+
+                        except Exception as e:
+                            print(f"[ERROR]: Could not create vehicle -> {e}")
+
                     case "1.3":
                         pass
                     case "1.4":
