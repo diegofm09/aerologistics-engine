@@ -286,6 +286,3 @@ class DeliveryVehicle:
         if isinstance(item, BasePackage):
             return item in self.packages
         return False
-
-
-car = DeliveryVehicle("TSWYW", 992992992.0, "CACA")

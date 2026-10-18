@@ -62,15 +62,60 @@ while True:
                             print(f"[ERROR]: Could not create vehicle -> {e}")
 
                     case "1.3":
-                        pass
+                        veh_id = input("Introduce the vehicle id: ")
+                        fleet = repository.load_fleet()
+                        found = False
+                        for v in fleet:
+                            if v.vehicle_id == veh_id:
+                                found = True
+                                while True:
+                                    strategy = input("What will be its strategy:\n 1) Ground Shipping\n 2) Air Shipping\n 3) Eco Drone Shipping\n")
+                                    match strategy:
+                                        case "1":
+                                            v.shipping_strategy = GroundShipping()
+                                            break
+                                        case "2":
+                                            v.shipping_strategy = AirShipping()
+                                            break
+                                        case "3":
+                                            if v.used_weight <= 3:
+                                                v.shipping_strategy = DroneEcoShipping()
+                                                break
+                                            else:
+                                                print("ERROR, the vehicle has more weight than a drone could carry")
+                                            
+                                        case _:
+                                            print("Error, please enter 1, 2 or 3")
+                                break
+                        if not found:
+                            print("Vehicle not found")
+                        else:
+                            repository.save_fleet(fleet)
+                            print("Fleet successfully updated and saved!")
+                                    
+                        
                     case "1.4":
-                        pass
+                        try:
+                            print("-- VEHICLE COST CALCULATOR --")
+                            fleet = repository.load_fleet()
+                            found = False
+                            veh_id = input("Enter the vehicle id: ")
+                            for v in fleet:
+                                if v.vehicle_id == veh_id:
+                                    found = True
+                                    kms = float(input("Enter the ammount of kms: "))
+                                    print(f"Total cost: {v.get_shipping_cost(kms)}$")
+                            if not found:
+                                print("Vehicle not found")
+                        except ValueError:
+                            print("Error, the kms must be a number")
+                        except Exception as e:
+                            print(f"Error: {e}")
+
                     case "1.5":
                         break                    
                     case _:
                         print("Error that option is not avaiable")
-
-
 
 
         case "2":
