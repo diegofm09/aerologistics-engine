@@ -1,6 +1,6 @@
-from core.models import StandardPackage, ExpressPackage, RefrigeratedPackage
+from models import StandardPackage, ExpressPackage, RefrigeratedPackage
 from typing import Any
-import core.exceptions
+import exceptions
 
 class PackageFactory:
     """The package factory"""

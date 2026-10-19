@@ -1,7 +1,8 @@
 from core.persistence import FleetRepository
 from core.observers import DeliverySubject, CustomerSMSListener, LogisticsAuditListener
-from core.models import DeliveryVehicle
+from core.models import DeliveryVehicle, StandardPackage, ExpressPackage, RefrigeratedPackage
 from core.strategies import DroneEcoShipping, GroundShipping, AirShipping
+from core.factories import PackageFactory
 
 repository = FleetRepository()
 delivery_subject = DeliverySubject()
@@ -23,8 +24,8 @@ while True:
                 print("-----------------------")
                 match suboption:
                     case "1.1":
-                        fleet_list = repository.load_fleet()
-                        for vehicle in fleet_list:
+                        fleet = repository.load_fleet()
+                        for vehicle in fleet:
                             print(f"ID: {vehicle.vehicle_id} SHIPPING STRATEGY: {vehicle.shipping_strategy.__class__.__name__} USED WEIGHT: {vehicle.used_weight}/{vehicle.max_weight_capacity}kg")
 
                     case "1.2":
@@ -125,7 +126,42 @@ while True:
                 print("-----------------------")
                 match suboption:
                     case "2.1":
-                        pass
+                        try:
+                            print("-- ADD NEW PACKAGE --")
+                            id = input("Enter its ID: ")
+                            weight = float(input("Enter its weight: "))
+                            destination = input("Enter its Destination Zipcode: ")
+                            height = float(input("Enter its height: "))
+                            length = float(input("Enter its length: "))
+                            width = float(input("Enter its width: "))
+                            while True:
+                                package_type = input("What will be its type:\n 1) Standard Package\n 2) Express Package\n 3) Refrigerated Package\n")
+                                match strategy:
+                                    case "1":
+                                        package_type = "standard"
+                                        urgency_level = None
+                                        temp_target = None
+                                        break
+                                    case "2":
+                                        package_type = "express"
+                                        temp_target = None
+                                        urgency_level = int(float(input("What will it be its urgency level from 1 to 5: ")))
+                                        break
+                                    case "3":  
+                                        package_type = "refrigerated"
+                                        urgency_level = None
+                                        temp_target = float(input("Enter its temperature target in celsius: "))
+                                        break                            
+                                    case _:
+                                        print("Error, please enter 1, 2 or 3")
+
+                            PackageFactory.create_package(type=package_type, package_id = id, weight_kg = weight, length = length, height = height, width = width, urgency_level = urgency_level, temp_target_celsius = temp_target)
+                            
+                            #AÑADIR AQUI LO DE AÑADIRLO AL CAMION DIEHIDOUIWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+                        
+                        except ValueError:
+                            print("Error, the size, weight, temperature target and urgency level parameters must be numbers")
+
                     case "2.2":
                         pass
                     case "2.3":
