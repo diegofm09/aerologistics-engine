@@ -134,33 +134,45 @@ while True:
                             height = float(input("Enter its height: "))
                             length = float(input("Enter its length: "))
                             width = float(input("Enter its width: "))
-                            while True:
-                                package_type = input("What will be its type:\n 1) Standard Package\n 2) Express Package\n 3) Refrigerated Package\n")
-                                match strategy:
-                                    case "1":
-                                        package_type = "standard"
-                                        urgency_level = None
-                                        temp_target = None
-                                        break
-                                    case "2":
-                                        package_type = "express"
-                                        temp_target = None
-                                        urgency_level = int(float(input("What will it be its urgency level from 1 to 5: ")))
-                                        break
-                                    case "3":  
-                                        package_type = "refrigerated"
-                                        urgency_level = None
-                                        temp_target = float(input("Enter its temperature target in celsius: "))
-                                        break                            
-                                    case _:
-                                        print("Error, please enter 1, 2 or 3")
 
-                            PackageFactory.create_package(type=package_type, package_id = id, weight_kg = weight, length = length, height = height, width = width, urgency_level = urgency_level, temp_target_celsius = temp_target)
+                            while True:
+                                package_type = input("What will be its type (standard, express, refrigerated): ").strip().lower()
+                                if package_type in ["standard", "express", "refrigerated"]:
+                                    break
+                                print("Error, please enter standard, express or refrigerated")
+
+                            package_data = {
+                                "package_id": id,
+                                "weight_kg": weight,
+                                "destination_zip": destination,
+                                "length": length,
+                                "width": width,
+                                "height": height
+                            }
+
+                            if package_type == "express":
+                                package_data["urgency_level"] = int(float(input("Enter urgency level (1 to 5): ")))
+       
+                            elif package_type == "refrigerated":
+                                package_data["target_temp_celsius"] = float(input("Enter target temperature in Celsius (-50 to 5): "))
+
+                            new_package = PackageFactory.create_package(package_type, **package_data)
                             
-                            #AÑADIR AQUI LO DE AÑADIRLO AL CAMION DIEHIDOUIWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+                            vehicle_id = input("Enter the vehicle ID to add the package: ")
+                            fleet = repository.load_fleet()
+                            found = False
+                            for v in fleet:
+                                if v.vehicle_id == vehicle_id:
+                                    found = True
+                                    v.add_package(new_package)
+                                    repository.save_fleet(fleet)
+                            if not found:
+                                print("Vehicle not found")         
                         
                         except ValueError:
                             print("Error, the size, weight, temperature target and urgency level parameters must be numbers")
+                        except Exception as e:
+                            print(f"Error: {e}")
 
                     case "2.2":
                         pass
