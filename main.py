@@ -3,6 +3,7 @@ from core.observers import DeliverySubject, CustomerSMSListener, LogisticsAuditL
 from core.models import DeliveryVehicle, StandardPackage, ExpressPackage, RefrigeratedPackage
 from core.strategies import DroneEcoShipping, GroundShipping, AirShipping
 from core.factories import PackageFactory
+from core.analytics import packages_extractor
 
 repository = FleetRepository()
 delivery_subject = DeliverySubject()
@@ -175,9 +176,61 @@ while True:
                             print(f"Error: {e}")
 
                     case "2.2":
-                        pass
+                        print("-- PACKAGE DELETER --")
+                        package_id = input("Enter the package ID: ")
+                        fleet = repository.load_fleet()
+                        found = False
+                        for v in fleet:
+                            for p in v.packages:
+                                if p.package_id == package_id:
+                                    found = True
+                                    v.delete_package(package_id)
+                                    print("Package Deleted Correctly")
+                                    repository.save_fleet(fleet)
+                                    break
+                        if not found:
+                            print("Package not found")
+
                     case "2.3":
-                        pass
+                        found = False
+                        while True:
+                            vehicle_id = input("Enter the vehicle ID to extract its packages: ")
+                            filtered = input("Do you want to filter them?:\n 1) Only standard packages\n 2) Only express packages\n 3) Only refrigerated packages\n 4) NO FILTER\n")
+                            match filtered:
+                                case "1":
+                                    filter = "Standard Package"
+                                    break
+                                case "2":
+                                    filter = "Express Package"
+                                    break
+                                case "3":
+                                    filter = "Refrigerated Package"
+                                    break
+                                case "4":
+                                    filter = None
+                                    break
+                                case _:
+                                    print("Error, please enter 1, 2, 3 or 4")
+                        fleet = repository.load_fleet()
+                        for v in fleet:
+                            if v.vehicle_id == vehicle_id:
+                                found = True
+                                vehicle = [v]
+                                for i in packages_extractor(vehicle, filter):
+                                    print("-----------------")
+                                    print(f"ID: {i.package_id}")
+                                    print(f"Weight: {i.weight_kg}")
+                                    print(f"Status: {'Shipped' if i.delivered == False else 'Delivered'} to {i.destination_zip}")
+                                    print(f"Dimensions: {i.length}*{i.width}*{i.height}")
+                                    if i.get_package_type() == "Express Package":
+                                        print(f"Urgency Level: {i.urgency_level}")
+                                    if i.get_package_type() == "Refrigerated Package":
+                                        print(f"Target Temp Celsius: {i.target_temp_celsius}")
+                        if not found:
+                            print("Vehicle not found")
+
+                                
+
                     case "2.4":
                         break                 
                     case _:
