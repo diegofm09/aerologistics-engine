@@ -4,6 +4,8 @@ from core.models import DeliveryVehicle, StandardPackage, ExpressPackage, Refrig
 from core.strategies import DroneEcoShipping, GroundShipping, AirShipping
 from core.factories import PackageFactory
 from core.analytics import packages_extractor
+from core.exceptions import MaxFleetError
+import json
 
 repository = FleetRepository()
 delivery_subject = DeliverySubject()
@@ -14,7 +16,7 @@ delivery_subject.attach(audit_listener)
 
 print("-----------------------")
 while True:
-    option = input(" Aerologistics Engine:\n 1) Vehicle Fleet Management\n 2) Package Management\n 3) Data Persistence Menu\n 4) Analysis and Reports Panel\n 5) Waybill Management and Exportation\n 6) Events and Audit System\n 7) Exit System\n")
+    option = input(" Aerologistics Engine:\n 1) Vehicle Fleet Management\n 2) Package Management\n 3) Configurations\n 4) Analysis and Reports Panel\n 5) Waybill Management and Exportation\n 6) Events and Audit System\n 7) Exit System\n")
     match option:
 
 
@@ -32,6 +34,11 @@ while True:
                     case "1.2":
                         try:
                             print("--- Add New Vehicle ---")
+                            with open(repository.config_p, "r") as file9:
+                                max_vehicles = json.load(file9)
+                            if len(repository.load_fleet()) >= max_vehicles["max_fleet_capacity"]:
+                                raise MaxFleetError
+                            
                             id = input("What will be the id of the new vehicle?: ")
                             while True:
                                 strategy = input("What will be its strategy:\n 1) Ground Shipping\n 2) Air Shipping\n 3) Eco Drone Shipping\n")
@@ -229,8 +236,6 @@ while True:
                         if not found:
                             print("Vehicle not found")
 
-                                
-
                     case "2.4":
                         break                 
                     case _:
@@ -239,16 +244,64 @@ while True:
         case "3":
             while True:
                 print("-----------------------")
-                suboption = input(" Data Persistence Menu:\n 3.1) Save Actual Fleet\n 3.2) Load Fleet\n 3.3) Check System Configuration\n 3.4) Close Data Persistence\n")
+                suboption = input(" Configurations:\n 3.1) Check Current Configuration\n 3.2) Change Configuration\n 3.3) Close Data Persistence\n")
                 print("-----------------------")
                 match suboption:
                     case "3.1":
-                        pass
+                        with open(repository.config_p, "r") as file6:
+                            config = json.load(file6)
+                        print("-- CURRENT CONFIGURATION --")
+                        print(f'Max Fleet Capacity: {config["max_fleet_capacity"]}')
+                        print(f'Fuel Price Base: {config["fuel_price_base"]}')
+                        print(f'Currency: {config["currency"]}')
+                        print(f'System Version: {config["system_version"]}')
                     case "3.2":
-                        pass
+                        while True:
+                            selection = input("Which Config would you like to change?:\n 1) Max Fleet Capacity\n 2) Fuel Price Base\n 3) Currency ($/€)\n")
+                            match selection:
+                                case "1":
+                                    while True:
+                                        try:
+                                            new = float(input("Enter the new max fleet capacity: "))
+                                            with open(repository.config_p, "r") as file6:
+                                                config = json.load(file6)
+                                            config["max_fleet_capacity"] = new
+                                            with open(repository.config_p, "w") as file6:
+                                                json.dump(file6, config, indent=2)
+                                            print("Config saved correctly")
+                                            break
+                                        except ValueError:
+                                            print("Error, please enter a number")
+                                    break
+                                case "2":
+                                    while True:
+                                        try:
+                                            new = float(input("Enter the new fuel price base: "))
+                                            with open(repository.config_p, "r") as file7:
+                                                config = json.load(file7)
+                                            config["fuel_price_base"] = new
+                                            with open(repository.config_p, "w") as file7:
+                                                json.dump(file7, config, indent=2)
+                                            print("Config saved correctly")
+                                            break
+                                        except ValueError:
+                                            print("Error, please enter a number")
+                                    break
+                                case "3":
+                                    with open(repository.config_p, "r") as file8:
+                                        config = json.load(file8)
+                                    if config["currency"] == "USD":
+                                        config["currency"] = "EUR"
+                                    else:
+                                        config["currency"] = "USD"
+                                    with open(repository.config_p, "w") as file8:
+                                        json.dump(file8, config, indent=2)
+                                    print("Config saved correctly")
+                                    break
+                                case _:
+                                    print("Option not avaiable")
+
                     case "3.3":
-                        pass
-                    case "3.4":
                         break                 
                     case _:
                         print("Error that option is not avaiable")

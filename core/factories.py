@@ -1,6 +1,6 @@
-from models import StandardPackage, ExpressPackage, RefrigeratedPackage
+from core.models import StandardPackage, ExpressPackage, RefrigeratedPackage
 from typing import Any
-import exceptions
+import core.exceptions
 
 class PackageFactory:
     """The package factory"""
@@ -16,4 +16,4 @@ class PackageFactory:
             case "refrigerated":
                 return RefrigeratedPackage(**kwargs)
             case _:
-                raise exceptions.NonExistinPackageType(f"The package type {type} does not exist, it must be standard, express or refrigerated")
+                raise core.exceptions.NonExistinPackageType(f"The package type {type} does not exist, it must be standard, express or refrigerated")

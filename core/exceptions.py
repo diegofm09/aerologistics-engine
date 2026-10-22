@@ -38,3 +38,7 @@ class InvalidShipping(AerologisticsEngineError):
     """The shipping km and kg must be higher than 0"""
     pass
 
+class MaxFleetError(AerologisticsEngineError):
+    """The fleet capacity is at its limit"""
+    pass
+
