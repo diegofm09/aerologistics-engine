@@ -105,6 +105,9 @@ while True:
                         
                     case "1.4":
                         try:
+                            with open(repository.config_p, "r") as file10:
+                                config = json.load(file10)
+
                             print("-- VEHICLE COST CALCULATOR --")
                             fleet = repository.load_fleet()
                             found = False
@@ -113,7 +116,7 @@ while True:
                                 if v.vehicle_id == veh_id:
                                     found = True
                                     kms = float(input("Enter the ammount of kms: "))
-                                    print(f"Total cost: {v.get_shipping_cost(kms)}$")
+                                    print(f'Total cost: {v.get_shipping_cost(kms)*config["fuel_price_base"]}{"€" if config["currency"] == "EUR" else "$"}')
                             if not found:
                                 print("Vehicle not found")
                         except ValueError:
@@ -267,7 +270,7 @@ while True:
                                                 config = json.load(file6)
                                             config["max_fleet_capacity"] = new
                                             with open(repository.config_p, "w") as file6:
-                                                json.dump(file6, config, indent=2)
+                                                json.dump(config, file6, indent=2)
                                             print("Config saved correctly")
                                             break
                                         except ValueError:
@@ -281,7 +284,7 @@ while True:
                                                 config = json.load(file7)
                                             config["fuel_price_base"] = new
                                             with open(repository.config_p, "w") as file7:
-                                                json.dump(file7, config, indent=2)
+                                                json.dump(config, file7, indent=2)
                                             print("Config saved correctly")
                                             break
                                         except ValueError:
@@ -295,7 +298,7 @@ while True:
                                     else:
                                         config["currency"] = "USD"
                                     with open(repository.config_p, "w") as file8:
-                                        json.dump(file8, config, indent=2)
+                                        json.dump(config, file8, indent=2)
                                     print("Config saved correctly")
                                     break
                                 case _:
