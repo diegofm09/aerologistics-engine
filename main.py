@@ -3,7 +3,7 @@ from core.observers import DeliverySubject, CustomerSMSListener, LogisticsAuditL
 from core.models import DeliveryVehicle, StandardPackage, ExpressPackage, RefrigeratedPackage
 from core.strategies import DroneEcoShipping, GroundShipping, AirShipping
 from core.factories import PackageFactory
-from core.analytics import packages_extractor
+from core.analytics import packages_extractor, calculate_fleet_weight
 from core.exceptions import MaxFleetError
 import json
 
@@ -316,7 +316,11 @@ while True:
                 print("-----------------------")
                 match suboption:
                     case "4.1":
-                        pass
+                        fleet = repository.load_fleet()
+                        weights = calculate_fleet_weight(fleet)
+                        print("-- FLEET WEIGHT ANALYSIS --")
+                        print(f"Total Weight: {weight["total_weight"]}\n Max Weight: {weight["max_weight"]}\n Min Weight: {weight["min_weight"]}")
+                    
                     case "4.2":
                         pass
                     case "4.3":
