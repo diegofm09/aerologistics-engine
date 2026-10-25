@@ -3,7 +3,7 @@ from core.observers import DeliverySubject, CustomerSMSListener, LogisticsAuditL
 from core.models import DeliveryVehicle, StandardPackage, ExpressPackage, RefrigeratedPackage
 from core.strategies import DroneEcoShipping, GroundShipping, AirShipping
 from core.factories import PackageFactory
-from core.analytics import packages_extractor, calculate_fleet_weight
+from core.analytics import packages_extractor, calculate_fleet_weight, filter_packages_weight, get_urgent_packages_destination
 from core.exceptions import MaxFleetError
 import json
 
@@ -319,18 +319,60 @@ while True:
                         fleet = repository.load_fleet()
                         weights = calculate_fleet_weight(fleet)
                         print("-- FLEET WEIGHT ANALYSIS --")
-                        print(f"Total Weight: {weight["total_weight"]}\n Max Weight: {weight["max_weight"]}\n Min Weight: {weight["min_weight"]}")
+                        print(f'Total Weight: {weights["total_weight"]}\n Max Weight: {weights["max_weight"]}\n Min Weight: {weights["min_weight"]}')
                     
                     case "4.2":
-                        pass
+                        fleet = repository.load_fleet()
+                        try:
+                            while True:
+                                selection = input("Do you want to add a MAX weight filter to the packages? (Y/N): ")
+                                match selection.strip().lower():
+                                    case "y":
+                                        max = float(input("What will it be: "))
+                                        break
+                                    case "n":
+                                        max = float("inf")
+                                        break
+                                    case _:
+                                        print("Error, enter Y or N")
+                            while True:
+                                selection = input("Do you want to add a MIN weight filter to the packages? (Y/N): ")
+                                match selection.strip().lower():
+                                    case "y":
+                                        min = float(input("What will it be: "))
+                                        break
+                                    case "n":
+                                        min = 0.0
+                                        break
+                                    case _:
+                                        print("Error, enter Y or N")
+                            filtered = filter_packages_weight(fleet, min, max)
+                            print("\n--- FILTERED PACKAGES ---")
+                            if not filtered:
+                                print("No packages match the filter criteria.")
+                            else:
+                                for (pkg_str, veh_id) in filtered:
+                                    print(f"{pkg_str} (Vehicle ID: {veh_id})")
+
+
+                        except ValueError:
+                            print("Error, you must enter numbers to the max/min parameters")                   
+
                     case "4.3":
-                        pass
+                        fleet = repository.load_fleet()
+                        zipcodes = get_urgent_packages_destination(fleet)
+                        for i in zipcodes:
+                            print(f"- {i}")
+
                     case "4.4":
                         pass
+
                     case "4.5":
-                        pass   
+                        pass  
+
                     case "4.6":
-                        break                 
+                        break   
+
                     case _:
                         print("Error that option is not avaiable")
 
