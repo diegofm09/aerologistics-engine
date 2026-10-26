@@ -419,9 +419,16 @@ while True:
                 print("-----------------------")
                 match suboption:
                     case "6.1":
-                        pass
+                        message = input("Enter the message you want to try: ")
+                        delivery_subject.notify(message)
                     case "6.2":
-                        pass
+                        if repository.app_log_p.stat().st_size > 0:
+                            with open(repository.app_log_p, "r", encoding="utf-8") as file11:
+                                app_log = file11.read()
+                            print("-- APP LOG --")
+                            print(app_log)
+                        else: 
+                            print("The app log is empty")
                     case "6.3":
                         break               
                     case _:
