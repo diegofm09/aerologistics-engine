@@ -3,7 +3,7 @@ from core.observers import DeliverySubject, CustomerSMSListener, LogisticsAuditL
 from core.models import DeliveryVehicle, StandardPackage, ExpressPackage, RefrigeratedPackage, Waybill
 from core.strategies import DroneEcoShipping, GroundShipping, AirShipping
 from core.factories import PackageFactory
-from core.analytics import packages_extractor, calculate_fleet_weight, filter_packages_weight, get_urgent_packages_destination, get_all_zipcodes, create_fast_consult_map
+from core.analytics import packages_extractor, compare_historical_zipcodes, calculate_fleet_weight, filter_packages_weight, get_urgent_packages_destination, get_all_zipcodes, create_fast_consult_map
 from core.exceptions import MaxFleetError
 import json
 
@@ -400,7 +400,8 @@ while True:
                             new_waybill = Waybill(id, sender, destination, date, final_cost)
                             print("Waybill created correctly")
                         except ValueError:
-                            print("Error, you must enter a number")
+                            print("Error, you must enter a number bigger than 0")
+
                     case "5.2":
                         if new_waybill:
                             repository.export_waybill(new_waybill)

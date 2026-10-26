@@ -5,6 +5,7 @@ from typing import Any
 from core.factories import PackageFactory
 from core.strategies import GroundShipping, AirShipping, DroneEcoShipping
 from core.models import Waybill
+from core.utils import audit_execution
 
 class FleetRepository:
     """Repository class managing data persistence, file storage initialization, and JSON serialization/deserialization for the fleet system."""
@@ -39,6 +40,7 @@ class FleetRepository:
         except Exception:
             pass
 
+    @audit_execution
     def save_fleet(self, vehicle_list: list[DeliveryVehicle]) -> None:
         """Saves the vehicle list in the fleet.json file"""
         final_vehicle_list = []
@@ -63,6 +65,7 @@ class FleetRepository:
         with open(self.fleet_p, "w", encoding="utf-8") as file3:
             json.dump(final_vehicle_list, file3, indent = 2)
 
+    @audit_execution
     def load_fleet(self) -> list[DeliveryVehicle]:
         """Loads the vehicle  list of the fleet.json file"""
         with open(self.fleet_p, "r", encoding="utf-8") as file4:
