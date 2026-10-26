@@ -3,7 +3,7 @@ from core.observers import DeliverySubject, CustomerSMSListener, LogisticsAuditL
 from core.models import DeliveryVehicle, StandardPackage, ExpressPackage, RefrigeratedPackage
 from core.strategies import DroneEcoShipping, GroundShipping, AirShipping
 from core.factories import PackageFactory
-from core.analytics import packages_extractor, calculate_fleet_weight, filter_packages_weight, get_urgent_packages_destination
+from core.analytics import packages_extractor, calculate_fleet_weight, filter_packages_weight, get_urgent_packages_destination, get_all_zipcodes, create_fast_consult_map
 from core.exceptions import MaxFleetError
 import json
 
@@ -365,10 +365,16 @@ while True:
                             print(f"- {i}")
 
                     case "4.4":
-                        pass
+                        fleet = repository.load_fleet()
+                        zipcodes = get_all_zipcodes(fleet)
+                        for i in zipcodes:
+                            print(f"- {i}")
 
                     case "4.5":
-                        pass  
+                        fleet = repository.load_fleet()
+                        fast_map = create_fast_consult_map(fleet)
+                        for i_key, i_item in fast_map.items():
+                            print(f"- {i_key}: {i_item[0]}kg {i_item[1]}")  
 
                     case "4.6":
                         break   
