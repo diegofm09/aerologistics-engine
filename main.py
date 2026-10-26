@@ -1,6 +1,6 @@
 from core.persistence import FleetRepository
 from core.observers import DeliverySubject, CustomerSMSListener, LogisticsAuditListener
-from core.models import DeliveryVehicle, StandardPackage, ExpressPackage, RefrigeratedPackage
+from core.models import DeliveryVehicle, StandardPackage, ExpressPackage, RefrigeratedPackage, Waybill
 from core.strategies import DroneEcoShipping, GroundShipping, AirShipping
 from core.factories import PackageFactory
 from core.analytics import packages_extractor, calculate_fleet_weight, filter_packages_weight, get_urgent_packages_destination, get_all_zipcodes, create_fast_consult_map
@@ -13,6 +13,7 @@ sms_listener = CustomerSMSListener()
 audit_listener = LogisticsAuditListener()
 delivery_subject.attach(sms_listener)
 delivery_subject.attach(audit_listener)
+new_waybill = None
 
 print("-----------------------")
 while True:
@@ -389,9 +390,23 @@ while True:
                 print("-----------------------")
                 match suboption:
                     case "5.1":
-                        pass
+                        try:
+                            print("-- NEW WAYBILL --")
+                            id = input("Enter its id: ")
+                            sender = input("Enter its sender: ")
+                            destination = input("Enter its destinaion: ")
+                            date = input("Enter its issued date: ")
+                            final_cost = float(input("Enter its final cost: "))
+                            new_waybill = Waybill(id, sender, destination, date, final_cost)
+                            print("Waybill created correctly")
+                        except ValueError:
+                            print("Error, you must enter a number")
                     case "5.2":
-                        pass
+                        if new_waybill:
+                            repository.export_waybill(new_waybill)
+                            print("Waybill exported correctly")
+                        else:
+                            print("Error, you dont have any waybill created, please create one in 5.1")
                     case "5.3":
                         break                    
                     case _:
