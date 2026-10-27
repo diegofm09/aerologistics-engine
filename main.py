@@ -7,6 +7,8 @@ from core.analytics import packages_extractor, compare_historical_zipcodes, calc
 from core.exceptions import MaxFleetError
 import json
 
+
+
 repository = FleetRepository()
 delivery_subject = DeliverySubject()
 sms_listener = CustomerSMSListener()
@@ -14,6 +16,8 @@ audit_listener = LogisticsAuditListener()
 delivery_subject.attach(sms_listener)
 delivery_subject.attach(audit_listener)
 new_waybill = None
+
+
 
 print("-----------------------")
 while True:
