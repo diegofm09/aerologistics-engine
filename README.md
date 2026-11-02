@@ -42,9 +42,13 @@ A robust command-line interface (CLI) application designed to manage and optimiz
     - **Observer pattern** for event logging and notifications.
       
 - **Data Persistence:** Automatically saves and loads the fleet to the fleet.json file and logs them into app_log.txt
+  
 - **Advanced Menu:** Comprehensive analytics dashboard with advanced filtering and data aggregation capabilities
+  
 - **Dynamic Configuration:** Adjust system parameters on the fly via JSON (fleet capacity limits, fuel price base, and currency selection).
+  
 - **Clean Code:** Uses Type Hints and docstrings for easier readability
+  
 - **Robust Error Handling with Custom Exceptions:** Prevents crashes from invalid inputs, missing files, or empty data lists, using a custom exceptions class
 
 ---
