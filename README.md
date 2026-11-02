@@ -33,11 +33,14 @@ A robust command-line interface (CLI) application designed to manage and optimiz
 ## 🚀 Features
 
 - **Object Oriented Programming:** Used to create classes and methods for a clean architecture using encapsulation, abstract classes, dunder methods and attributes...
+  
 - **Advanced Python Optimizations:** Implementation of `@dataclass` (with `frozen=True` and `__post_init__`), memory optimization via `__slots__`, and custom execution-auditing decorators.
+  
 - **Design Patterns:**
     - **Strategy pattern** for shipping costs (Ground, Air, Drone)
     - **Factory pattern** for package instantiation (PackageFactory)
     - **Observer pattern** for event logging and notifications.
+      
 - **Data Persistence:** Automatically saves and loads the fleet to the fleet.json file and logs them into app_log.txt
 - **Advanced Menu:** Comprehensive analytics dashboard with advanced filtering and data aggregation capabilities
 - **Dynamic Configuration:** Adjust system parameters on the fly via JSON (fleet capacity limits, fuel price base, and currency selection).
