@@ -30,6 +30,7 @@ while True:
                 print("-----------------------")
                 suboption = input(" Vehicle Fleet Management:\n 1.1) Check Current Vehicle List\n 1.2) Add New Vehicle\n 1.3) Change Vehicle Strategy\n 1.4) Calculate Vehicle Shipping Cost\n 1.5) Close Vehicle Fleet Management\n")
                 print("-----------------------")
+
                 match suboption:
                     case "1.1":
                         fleet = repository.load_fleet()
@@ -79,6 +80,7 @@ while True:
                         veh_id = input("Introduce the vehicle id: ")
                         fleet = repository.load_fleet()
                         found = False
+
                         for v in fleet:
                             if v.vehicle_id == veh_id:
                                 found = True
@@ -101,8 +103,10 @@ while True:
                                         case _:
                                             print("Error, please enter 1, 2 or 3")
                                 break
+
                         if not found:
                             print("Vehicle not found")
+
                         else:
                             repository.save_fleet(fleet)
                             print("Fleet successfully updated and saved!")
@@ -117,13 +121,16 @@ while True:
                             fleet = repository.load_fleet()
                             found = False
                             veh_id = input("Enter the vehicle id: ")
+
                             for v in fleet:
                                 if v.vehicle_id == veh_id:
                                     found = True
                                     kms = float(input("Enter the ammount of kms: "))
                                     print(f'Total cost: {v.get_shipping_cost(kms)*config["fuel_price_base"]}{"€" if config["currency"] == "EUR" else "$"}')
+                            
                             if not found:
                                 print("Vehicle not found")
+
                         except ValueError:
                             print("Error, the kms must be a number")
                         except Exception as e:
@@ -177,6 +184,7 @@ while True:
                             vehicle_id = input("Enter the vehicle ID to add the package: ")
                             fleet = repository.load_fleet()
                             found = False
+                            
                             for v in fleet:
                                 if v.vehicle_id == vehicle_id:
                                     found = True
